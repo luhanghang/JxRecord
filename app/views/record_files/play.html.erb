@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title><%=@title%></title>
+	<script type="text/javascript">
+		var vlc,timeTag,timeStart;
+		
+		window.onload = init;
+		
+		function init() {
+			var moz = document.getElementById("vlc");
+			var ie = document.getElementById("vlcIE");	
+			try {
+				var v = moz.video;
+				vlc = moz;
+			} catch(e) {
+				vlc = ie;
+			}
+			
+			timeTag = document.getElementById("timeTag");
+			timeStart = new Date(timeTag.innerHTML.replace(/-/g,   "/ "));
+			setInterval("showTime()", 100);		
+		}
+				
+		function padding(field) {
+			if (field < 10) {
+				return "0" + field;
+			}
+			return field;
+		}
+		
+		function showTime() {
+			var now = new Date(timeStart.getTime() + vlc.input.time);
+			timeTag.innerHTML = now.getFullYear() + "-" + (now.getMonth() + 1) + "-" + now.getDate() + " " + now.getHours() + ":" + padding(now.getMinutes()) + ":" + padding(now.getSeconds());	
+		}
+	</script>
+</head>
+<body style="margin:0;background-color:#000">
+	<div style="margin:0 auto;width:720px;margin-bottom:10px">
+		<div>
+		  	<object classid="clsid:9BE31822-FDAD-461B-AD51-BE1D1C159921" codebase="http://download.videolan.org/pub/videolan/vlc/last/win32/axvlc.cab" width="720" height="576" events="True" id="vlcIE">
+				<param name="MRL" value="rtsp://<%=@host%><%=@record.path_file%>" />
+				<param name="ShowDisplay" value="True" />
+				<param name="Loop" value="False" />
+				<param name="AutoPlay" value="True" />
+				<embed type="application/x-vlc-plugin" pluginspage="http://www.videolan.org" version="VideoLAN.VLCPlugin.2" width="720" height="576" id="vlc" name="video2" autoplay="yes" loop="no" hidden="no" target="rtsp://<%=@host%><%=@record.path_file%>" />
+			</object>
+			<div style="color:#fff;text-align:center" id="timeTag"><%=@startTime%></div>
+		</div>
+	</div>
+</body>
+</html>

@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config>
+  <root>/mnt/records</root>
+  <maxlength>30</maxlength>
+  <keepdays>90</keepdays>
+</config>

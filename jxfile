@@ -1,0 +1,2 @@
+#!/bin/sh
+curl http://localhost:3000/tasks/file?name=$1&action=$2
