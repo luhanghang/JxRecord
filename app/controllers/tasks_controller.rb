@@ -2,7 +2,7 @@ class TasksController < ActionController::Base
 	def index
 		year = Time.now.year
 		month = "%02d" % Time.now.month 
-		day = "%2d" % Time.now.day 
+		day = "%02d" % Time.now.day 
 		hour = Time.now.hour
 		hh = "%02d" % hour
 		min = Time.now.min
