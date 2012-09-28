@@ -4,7 +4,9 @@ class RecordFilesController < ApplicationController
     to_date = params[:to_date]
     spot = params[:id]
     conditions = "record_date >= '#{from_date}' and record_date <= '#{to_date}' and end_hour is not null"
-    gateway = Gateway.find_by_address(request.remote_ip)
+    remote_ip = params[:remote_ip]
+    remote_ip = request.remote_ip if (remote_ip == nil or remote_ip == '')
+    gateway = Gateway.find_by_address(remote_ip)
     spot = gateway.spots.find_by_seq(spot)
     @records = gateway.record_files.find_all_by_spot_id(spot,:conditions=>conditions)
   end
