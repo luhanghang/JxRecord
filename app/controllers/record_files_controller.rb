@@ -2,6 +2,9 @@ class RecordFilesController < ApplicationController
   def search
     from_date = params[:from_date]
     to_date = params[:to_date]
+    if to_date == nil or to_date == ''
+    	to_date = from_date
+    end
     spot = params[:id]
     conditions = "record_date >= '#{from_date}' and record_date <= '#{to_date}' and end_hour is not null"
     remote_ip = params[:remote_ip]
@@ -16,6 +19,12 @@ class RecordFilesController < ApplicationController
     @record = RecordFile.find(params[:id])
     @startTime = "#{@record.record_date} #{Utils.date @record.start_hour}:#{Utils.date @record.start_min}"
     @title = "#{params[:spot_name]} #{@record.record_date} #{Utils.date @record.start_hour}:#{Utils.date @record.start_min}-#{Utils.date @record.end_hour}:#{Utils.date @record.end_min}"
+  end
+  
+  def download
+  	file = params[:file]
+  	send_file file, :type => 'application/octet-stream', :disposition => 'inline',:filename => params[:filename]
+  	return
   end
   
   def create 
