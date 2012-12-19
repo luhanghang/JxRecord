@@ -13,6 +13,27 @@ class RecordFilesController < ApplicationController
     spot = gateway.spots.find_by_seq(spot)
     @records = gateway.record_files.find_all_by_spot_id(spot,:conditions=>conditions)
   end
+  
+  def remove 
+  	spot = params[:id]
+  	remote_ip = params[:remote_ip]
+    remote_ip = request.remote_ip if (remote_ip == nil or remote_ip == '')
+    gateway = Gateway.find_by_address(remote_ip)
+    spot = gateway.spots.find_by_seq(spot)
+    ActiveRecord::Base.connection().insert("insert into record_file_remove_queue select null,path_file,now(),now() from record_files where spot_id = #{spot.id} and gateway_id = #{gateway.id}");
+    render :text => "ok" 
+  end
+  
+  def do_remove
+  	files = RemoveFile.find(:all,:limit => 5000)
+  	files.each do |file|
+  		if FileTest::exists?(file.file)
+	        File.delete file.file
+	    end
+	    file.delete
+  	end
+  	render :text => "ok"
+  end
 
   def play
   	@host = request.host
